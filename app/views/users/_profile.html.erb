@@ -10,9 +10,34 @@
 		<th>introduction</th>
 		<th><%= @user.introduction %></th>
 	</tr>
+	<tr>
+		<th>follow</th>
+		<th><%= @user.followings.count %></th>
+	</tr>
+	<tr>
+		<th>follower</th>
+		<th><%= @user.followers.count %></th>
+	</tr>
+	<tr>
+		<th>
+			<% unless current_user == @user %>
+				<% if current_user.following?(@user) %>
+					<%= form_with url: relationships_path, method: :delete do %>
+					<%= hidden_field_tag :follow_id, @user.id %>
+					<%= submit_tag 'フォローを外す' %>
+					<% end %>
+				<% else %>
+					<%= form_with url: relationships_path do %>
+					<%= hidden_field_tag :follow_id, @user.id %>
+					<%= submit_tag 'フォローする' %>
+					<% end %>
+				<% end %>
+			<% end %>
+		</th>
+	</tr>
 </table>
 <% if @user == current_user %>
-<div class="row">
-	<%= link_to '', edit_user_path(@user), class: "col-xs-12 btn btn-default glyphicon glyphicon-wrench" %>
-</div>
+	<div class="row">
+		<%= link_to '', edit_user_path(@user), class: "col-xs-12 btn btn-default glyphicon glyphicon-wrench" %>
+	</div>
 <% end %>
